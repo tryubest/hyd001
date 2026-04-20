@@ -1,0 +1,50 @@
+---
+description: TypeScript / Next.js 项目代码风格约定
+globs: **/*.{ts,tsx,js,jsx}
+alwaysApply: false
+---
+
+# 代码风格
+
+## TypeScript
+- `strict: true`，不允许 `any`，不得不用时加 `// eslint-disable-next-line` 并写原因
+- 对外导出的函数必须有显式返回类型
+- 优先用 `type` 定义对象形状，`interface` 只在需要继承时用
+- 枚举用字符串字面量联合类型代替 `enum`，例：
+  ```ts
+  type JobStatus = "pending" | "running" | "succeeded" | "failed";
+  ```
+
+## Next.js App Router
+- Server Component 默认，需要交互再加 `"use client"`
+- 数据拉取优先在 Server Component 里做，不要无脑用 `useEffect`
+- API 路由放 `app/api/<resource>/route.ts`
+- 每个 route.ts 必须用 `zod` 校验入参
+
+## 错误处理
+```ts
+// ❌ 不要吞错误
+try { await doThing(); } catch {}
+
+// ✅ 记录 + 抛出带因语境的错误
+try { await doThing(); } catch (e) {
+  console.error("doThing failed", { cause: e });
+  throw new Error("doThing failed", { cause: e });
+}
+```
+
+## 业务代码组织
+- `lib/github/` —— Octokit 封装、GitHub App 鉴权、PR 创建
+- `lib/translator/` —— OpenRouter 客户端、分块、翻译 prompt
+- `lib/queue/` —— 任务入队、worker、重试
+- `lib/db.ts` —— 共享 PrismaClient 单例（防止开发热更新连接爆炸）
+
+## 命名
+- 文件名：`kebab-case.ts`
+- React 组件文件：`PascalCase.tsx`
+- 环境变量：`SCREAMING_SNAKE_CASE`，分类前缀如 `GITHUB_APP_*` / `OPENROUTER_*`
+
+## 注释
+- 只写"为什么"，不写"做了什么"
+- 复杂正则、非直觉的业务规则、绕过的坑必须写注释
+- 禁止 `// Import xxx` / `// Return result` 这类流水账注释

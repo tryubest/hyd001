@@ -1,0 +1,84 @@
+# ============ 密钥与环境变量（最高优先级，禁止泄露） ============
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.json
+auth.json
+
+# ============ Node.js / Next.js / pnpm ============
+node_modules/
+.next/
+out/
+dist/
+build/
+.vercel/
+.turbo/
+.swc/
+*.tsbuildinfo
+next-env.d.ts
+
+# 包管理锁文件（pnpm 使用，npm/yarn 的不提交避免混淆）
+package-lock.json
+yarn.lock
+
+# ============ Python（你项目里有 analyze.py 等脚本） ============
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ============ 日志 / 临时 / 缓存 ============
+*.log
+logs/
+tmp/
+temp/
+.cache/
+.parcel-cache/
+*.pid
+*.seed
+
+# ============ 编辑器 / 操作系统 ============
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============ Cursor 本地状态（避免把个人偏好推到远程） ============
+.cursor/logs/
+
+# ============ 数据库 / 本地数据 ============
+*.sqlite
+*.sqlite3
+*.db
+prisma/*.db
+prisma/*.db-journal
+
+# ============ 项目特定产物 ============
+# 你已有的一些 py 脚本产出的文件（按需扩展）
+*.xlsx.tmp
+~$*.xlsx
+~$*.docx
+
+# ============ 大文件 / 二进制（如需版本化请用 Git LFS） ============
+*.zip
+*.tar.gz
+*.7z
+*.exe
+*.dmg

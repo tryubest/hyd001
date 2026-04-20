@@ -1,0 +1,40 @@
+---
+description: GitHub 文档翻译 SaaS 项目背景和技术栈
+alwaysApply: true
+---
+
+# 项目：GitHub Global（文档翻译 SaaS）
+
+## 一句话定位
+用户输入任意 GitHub 仓库地址，AI 自动把其中的 Markdown 文档翻译成多语言，并通过 PR 提交回仓库；文档更新时自动增量重译。
+
+## 技术栈（已确定，不要擅自更换）
+- **框架**：Next.js 15 App Router + TypeScript（严格模式）
+- **UI**：shadcn/ui + Tailwind CSS + lucide-react 图标
+- **数据库**：Neon Postgres + Prisma ORM
+- **认证**：GitHub App（OAuth 用户登录 + Installation 做仓库操作）
+- **AI**：OpenRouter（OpenAI 兼容接口）统一接入多模型
+- **包管理**：pnpm（不要用 npm / yarn）
+- **部署**：Vercel
+- **内网穿透**：cloudflared（本地调试 Webhook）
+
+## 关键业务对象
+- `User`：登录用户，来自 GitHub OAuth
+- `Installation`：用户在自己仓库上安装 App 后生成的授权实体
+- `Repository`：用户导入并开启翻译的仓库
+- `TranslationJob`：一次完整翻译任务（含多个文件）
+- `FileTranslation`：单个文件的翻译记录（含原文 hash 做增量判断）
+
+## 核心约束
+- 代码块、行内代码、URL、图片链接**不翻译**
+- 翻译完成后以 PR 提交，**不直接 push 到默认分支**
+- 所有密钥走 `.env`，禁止硬编码
+- 模型 ID 走 `.env` 配置，禁止硬编码
+- 使用 `:free` 后缀的 OpenRouter 免费模型做学习阶段开发
+
+## 目录约定
+- `app/` —— Next.js 路由和页面
+- `lib/` —— 业务逻辑（github、translator、queue 等）
+- `prisma/` —— schema 和 migrations
+- `docs/` —— PRD、架构、决策记录
+- `components/` —— UI 组件（shadcn/ui 生成的放 `components/ui/`）
